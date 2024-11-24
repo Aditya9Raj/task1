@@ -1,21 +1,11 @@
 steps:
-  # Step 1: Build the JAR file
-  - name: 'maven:3.8.4-jdk-17'
-    entrypoint: 'mvn'
-    args: ['clean', 'package']
-    id: 'Build Application'
-
-  # Step 2: Build Docker Image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'us-central1-docker.pkg.dev/cloud-task123/my-repository/spring-boot-app:latest', '.']
-    id: 'Build Docker Image'
-
-  # Step 3: Push Docker Image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/cloud-task123/my-repository/spring-boot-app:latest']
-    id: 'Push Docker Image'
 
-  # Step 4: Authenticate with GKE
+
+  # Step 3: Deploy to Google Kubernetes Engine (GKE))
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       [
@@ -28,28 +18,22 @@ steps:
         '--project',
         'cloud-task123',
       ]
-    id: 'Authenticate with GKE'
-
-  # Step 5: Deploy Kubernetes Resources
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['apply', '-f', 'resources.yaml']
+    args:
+      ['apply', '-f', 'resources.yaml']
     env:
       - 'CLOUDSDK_CONTAINER_CLUSTER=cluster1'
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1'
-    id: 'Deploy Resources'
 
-  # Step 6: Expose Application via LoadBalancer
+  # Step 5: Expose the application via a LoadBalancer using service.yaml
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['apply', '-f', 'service.yaml']
+    args:
+      ['apply', '-f', 'service.yaml']
     env:
       - 'CLOUDSDK_CONTAINER_CLUSTER=cluster1'
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1'
-    id: 'Expose Application'
 
-  # Step 7: Retrieve External IP
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['get', 'svc', 'spring-boot-service']
-    id: 'Retrieve Service IP'
+
 
 options:
   logging: CLOUD_LOGGING_ONLY
