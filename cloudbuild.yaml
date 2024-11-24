@@ -5,7 +5,7 @@ steps:
     args: ['push', 'us-central1-docker.pkg.dev/cloud-task123/my-repository/spring-boot-app:latest']
 
 
-  # Step 3: Deploy to Google Kubernetes Engine (GKE))
+  # Step 3: Deploy to Google Kubernetes Engine (GKE)) okay sure
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       [
@@ -37,3 +37,4 @@ steps:
 
 options:
   logging: CLOUD_LOGGING_ONLY
+#okay lets change it 
