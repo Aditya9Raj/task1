@@ -28,10 +28,20 @@ steps:
   # Step 5: Expose the application via a LoadBalancer using service.yaml
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
-      ['apply', '-f', 'service.yaml']
+      ['get', 'service', 'spring-boot-service']
     env:
       - 'CLOUDSDK_CONTAINER_CLUSTER=cluster1'
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1'
+    id: 'Check if service exists'
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+     ['apply', '-f', 'service.yaml']
+    env:
+      - 'CLOUDSDK_CONTAINER_CLUSTER=cluster1'
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1'
+    waitFor: ['Check if service exists']
+
 
 
 
