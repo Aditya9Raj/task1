@@ -8,5 +8,5 @@ spec:
     app: spring-boot-app
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8080
+      port: 80        # External port exposed
+      targetPort: 8080 # Port your application listens on inside the container
